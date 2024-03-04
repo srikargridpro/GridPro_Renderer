@@ -392,7 +392,7 @@
 
     /// @brief    copy as value vertex attribute array
     /// @details  Copy the position array as deep copy to another primitive set
-    /// @details  This is useful when you want to share the same position array between multiple primitive sets
+    /// @details  This is useful when you want to copy the same position array between multiple primitive sets
     /// @param src 
     /// @param dst 
     __INLINE__ void GeometryDescriptor::copy_attrib_array(const std::string& src , const std::string& dst , PrimitiveSetInstance::VertexArrayType type) {
