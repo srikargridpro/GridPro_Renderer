@@ -2,16 +2,24 @@
 #ifndef _GP_GUI_GEOMETRY_DESCRIPTOR_DRAWABLE_H_
 #define _GP_GUI_GEOMETRY_DESCRIPTOR_DRAWABLE_H_
 
+/// @file _GP_GUI_GEOMETRY_DESCRIPTOR_H_
+/// @brief This file contains the definition of the GeometryDescriptor class
+/// @details This file contains the definition of the GeometryDescriptor class, which is used to store and manage drawable objects, including points, lines, triangles, and other primitives.
+/// @details The class is designed to be used with OpenGL, but it can be used with other rendering systems as well.
+/// Provides a standard interface for rendering engines to use.
+
+/// @dependencies 
+/// @details   This class depends on the following libraries:
+/// @details - STL (for data structures and algorithms)
+
+/// @note      Can be used independently as a standalone class
+
 #include <iostream>
 #include <vector>
 #include <unordered_map>
 #include <memory>
 #include <cstdint>
 #include <string>
-
-#include <glm/glm.hpp>
-#include <glm/gtc/type_ptr.hpp>
-#include <glm/gtc/matrix_transform.hpp>
 
 /// @brief Disable this flag to remove runtime safety checks and to improve performance
 #define _ENABLE_RUNTIME_SAFETY_CHECKS_
@@ -21,7 +29,7 @@
 /// @details disable this flag to do manual dirty flag management for slightly performance improvement
 #define _ENABLE_AUTOMATIC_DIRTY_FLAG_MANAGEMENT_
 
-/// @brief inline macro for cross-platform compatibility
+/// @brief inline macro for header only implementation (optional)
 #define __INLINE__ inline 
 
 #ifndef GLAPI
@@ -178,23 +186,7 @@ public:
             INDEX_ARRAY    = GL_INDEX_ARRAY
         };
 
-        const std::string   InstanceName; /// @brief Name of the primitive set instance
-        const PrimitiveType primitiveType; /// @brief Primitive type (e.g., GL_TRIANGLES, GL_LINES, etc.)
-
-        ColorFormat   colorFormat; /// @brief RGB or RGBA values for each vertex
-        ColorScheme   colorScheme; /// @brief Color scheme for the primitive set
-        ShadingModel  shadingModel; /// @brief Shading model for the primitive set
-        PickScheme    pickScheme;  /// @brief Pick scheme for the primitive set
-        struct unique_color_reservation {
-            uint32_t start, end;
-        } pick_color_reservation; /// @brief Pick color reservation for the primitive set
-        MaterialProperty materialProperty; /// @brief Material properties for the primitive set
-
-        std::shared_ptr<std::vector<float>>    positions; /// @brief Positions for this primitive set
-        std::shared_ptr<std::vector<float>>    normals;   /// @brief Normals for this primitive set
-        std::shared_ptr<std::vector<uint8_t>>  colors;    /// @brief RGB or RGBA values for each vertex
-        std::shared_ptr<std::vector<uint32_t>> indices;   /// @brief Indices for this primitive set
-        
+        /// @brief  Enumeration for dirty flags
         enum DirtyFlags {
             DIRTY_NONE           = 0,
             DIRTY_POSITIONS      = 1 << 0,
@@ -207,9 +199,11 @@ public:
             DIRTY_ALL            = DIRTY_POSITIONS | DIRTY_NORMALS | DIRTY_COLORS | DIRTY_INDICES | DIRTY_SHADE_MODEL | DIRTY_COLOR_SCHEME | DIRTY_PICK_SCHEME
             
         };
-
-        uint32_t dirtyFlags; /// @brief Flags to indicate which data has changed
-
+        
+        struct unique_color_reservation {
+            uint32_t start, end;
+        }; 
+   
         PrimitiveSetInstance(const std::string& _InstanceName,  GLenum _PrimitiveType) : InstanceName(_InstanceName), primitiveType(static_cast<PrimitiveType>(_PrimitiveType)), colorFormat(RGB), dirtyFlags(DIRTY_NONE), colorScheme(PER_PRIMITIVE_SET), pickScheme(PICK_NONE) , shadingModel(FLAT) , materialProperty(COLOR_MATERIAL)
         {
             positions = std::make_shared<std::vector<float>>();
@@ -255,6 +249,7 @@ public:
         void set_color_scheme(uint32_t scheme)        { colorScheme = static_cast<ColorScheme>(scheme); }
         
         /// @brief Get the color scheme
+        /// @return PrimitiveSetInstance::ColorScheme
         const ColorScheme get_color_scheme() const    { return colorScheme; }
         const GLenum get_color_scheme_enum() const    { return static_cast<GLenum>(colorScheme); }
 
@@ -423,6 +418,28 @@ public:
 
             return valid;
             } 
+             
+            private : 
+            friend class GeometryDescriptor;
+
+            const std::string   InstanceName; /// @brief Name of the primitive set instance
+            const PrimitiveType primitiveType; /// @brief Primitive type (e.g., GL_TRIANGLES, GL_LINES, etc.)
+
+            ColorFormat      colorFormat; /// @brief RGB or RGBA values for each vertex
+            ColorScheme      colorScheme; /// @brief Color scheme for the primitive set
+            ShadingModel     shadingModel; /// @brief Shading model for the primitive set
+            MaterialProperty materialProperty; /// @brief Material properties for the primitive set
+
+            PickScheme    pickScheme;  /// @brief Pick scheme for the primitive set
+            struct unique_color_reservation  pick_color_reservation; /// @brief Pick color reservation for the primitive set
+        
+
+            std::shared_ptr<std::vector<float>>    positions; /// @brief Positions for this primitive set
+            std::shared_ptr<std::vector<float>>    normals;   /// @brief Normals for this primitive set
+            std::shared_ptr<std::vector<uint8_t>>  colors;    /// @brief RGB or RGBA values for each vertex
+            std::shared_ptr<std::vector<uint32_t>> indices;   /// @brief Indices for this primitive set
+        
+            uint32_t dirtyFlags; /// @brief Flags to indicate which data has changed
 
             };  // Struct PrimitiveSetInstance
 
