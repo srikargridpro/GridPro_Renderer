@@ -22,9 +22,9 @@ Renderer Lib Provides a API independent abstraction like OpenScene Graph and VTU
                Gp_gui_scene& Scene = *(view->get_scene()); 
                Instrumentation::Stopwatch timer("Updating Data");    
  
-               std::shared_ptr<GeometryDescriptor> test1 = std::make_shared<GeometryDescriptor>();
+               std::shared_ptr<GeometryDescriptor> cube_descriptor = std::make_shared<GeometryDescriptor>();
                std::string cube_name = "Cube1";
-               (test1)->set_current_primitive_set(cube_name, GL_QUADS);
+               (cube_descriptor)->set_current_primitive_set(cube_name, GL_QUADS);
 			  
                // Vertex positions for the cube (each vertex appears only once)
                std::vector<float> positions1 = {
@@ -54,16 +54,16 @@ Renderer Lib Provides a API independent abstraction like OpenScene Graph and VTU
                0, 1, 5, 4
               };
 
-              (test1)->move_pos_array(std::move(positions1));
-              (test1)->move_index_array(std::move(indices1));
-              (*test1)->set_wireframe_mode(GL_WIREFRAME_NONE);
+              (cube_descriptor)->move_pos_array(std::move(positions1));
+              (cube_descriptor)->move_index_array(std::move(indices1));
+              (*cube_descriptor)->set_wireframe_mode(GL_WIREFRAME_NONE);
       
-              (*test1)->set_pick_scheme(GL_PICK_BY_PRIMITIVE);
+              (*cube_descriptor)->set_pick_scheme(GL_PICK_BY_PRIMITIVE);
 
               Gp_gui_entity_handle triangle_handle1 = Scene.get_entity(cube_name);
               OpenGL_3_3_RenderKernel* triangle_render_kernel1 = triangle_handle1.GetComponent<OpenGL_3_3_RenderKernel>();
 
-              triangle_render_kernel1->set_geometry_descriptor(test1);	
+              triangle_render_kernel1->set_geometry_descriptor(cube_descriptor);	
 
               Scene.update(1.0f);
            }
