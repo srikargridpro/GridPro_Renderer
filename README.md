@@ -72,6 +72,7 @@ Renderer Lib Provides a API independent abstraction like OpenScene Graph and VTU
            {	
            	std::cout << "Exception : " << e.what() << std::endl;
            }
+```
 If you encounter any issues or have questions, please don't hesitate to [open an issue](https://github.com/ksrikar1234/HPS_API_Documentation/issues) on GitHub.
 
 Happy coding!
