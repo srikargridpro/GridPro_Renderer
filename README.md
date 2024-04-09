@@ -23,10 +23,8 @@ For detailed information about the API provided by the HPS Application Framework
 
 To see practical examples of how to use the HPS Application Framework, refer to the [Examples](./examples) directory in this repository. You'll find a variety of sample projects that demonstrate different aspects of the framework.
 
-
----
-
 ## Getting Started
+---
 
 ```cpp 
 
