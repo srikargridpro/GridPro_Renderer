@@ -1,6 +1,21 @@
+#include <iostream>
+#include "gp_gui_geometry_descriptor.h"
+#include "gp_gui_debug.h"
 
+namespace gridpro_gui {
 
-#include "../include/gp_gui_geometry_descriptor.h"
+    /// @brief Constructor
+    GeometryDescriptor::GeometryDescriptor() : currentPrimitiveSetInstanceName("_DEFAULT_") 
+    { 
+        currentPrimitiveSet = std::make_shared<PrimitiveSetInstance>(currentPrimitiveSetInstanceName, GL_POINTS);
+        primitives[currentPrimitiveSetInstanceName] = currentPrimitiveSet;
+    }
+    
+    /// @brief Destructor
+    GeometryDescriptor::~GeometryDescriptor() 
+    {
+
+    }
 
   /// @brief Set a new primitive set
   /// @param name 
@@ -12,9 +27,8 @@
         currentPrimitiveSetInstanceName = name;
         if(primitives.find(name) != primitives.end() && primitives[name] != nullptr)
         {
-            primitives[name]->reset();
-            primitives[name]->dirtyFlags = PrimitiveSetInstance::DIRTY_ALL;
-            std::cerr << "Warning ! You are ovewriting an existing Primitive set with ID : " << name << "\n"; 
+            primitives[name].reset();
+            DEBUG_PRINT("Warning ! You are ovewriting an existing Primitive set with ID : ", name , "\n"); 
         }  
         primitives[name] = std::make_shared<PrimitiveSetInstance>(name, Primitivetype);
 
@@ -26,24 +40,24 @@
   /// @param Primitivetype
   /// @details This function is used to set the current primitive set with a given name and primitive type from map
   /// @details If a primitive set with the same name already exists, it will be overwritten
-    __INLINE__ void GeometryDescriptor::set_current_primitive_set(const std::string& name , GLenum Primitivetype = GL_NONE) {
+    __INLINE__ void GeometryDescriptor::set_current_primitive_set(const std::string& name , GLenum Primitivetype = GL_NONE_NULL) {
         currentPrimitiveSetInstanceName = name;
         if(primitives.find(name) == primitives.end())
         {
-           if(Primitivetype == GL_NONE) 
+           if(Primitivetype == GL_NONE_NULL) 
            {
               std::string err =  std::string("Warning ! You are creating a new Primitive set with ID : ") + name + std::string(" with no Primitive type. Set a Valid PrimitiveType\n");
               throw std::runtime_error(err);
            }
  
            primitives[name] = std::make_shared<PrimitiveSetInstance>(name, Primitivetype);
-           std::cerr << "Warning ! You are creating a new Primitive set with ID : " << name << ". Use set_new_primitive_set() instead if you create a new PrimitiveSet \n";
+           DEBUG_PRINT("Warning ! You are creating a new Primitive set with ID : ", name , ". Use set_new_primitive_set() instead if you create a new PrimitiveSet \n");
         }
         else
         {
-            if(primitives[name]->get_primitive_type_enum() == Primitivetype)
-               std::cerr << "Warning ! You are trying to ovewrite an existing Primitive set with const Primitive type ID : " << name 
-                         << "Use set_new_primitive_set() instead if you create a new PrimitiveSet\n"; 
+            if(primitives[name]->get_primitive_type_enum() != Primitivetype)
+               DEBUG_PRINT("Warning ! You are trying to ovewrite an existing Primitive set with const Primitive type ID : ",  name ,
+                          " !!!. Use set_new_primitive_set() instead if you create a new PrimitiveSet\n"); 
         }
         currentPrimitiveSet = primitives[name];    
     }
@@ -178,7 +192,7 @@
     __INLINE__ void GeometryDescriptor::copy_pos_array(const std::vector<float>& position_array) {
 
         auto& primitiveSet = currentPrimitiveSet;
-        primitiveSet->positions.reset();
+        //primitiveSet->positions.reset();
         primitiveSet->positions = std::make_shared<std::vector<float>>(position_array);
         primitiveSet->setDirty(PrimitiveSetInstance::DIRTY_POSITIONS);
     }
@@ -187,7 +201,7 @@
     __INLINE__ void GeometryDescriptor::copy_normal_array(const std::vector<float>& normal_array) {
 
         auto& primitiveSet = currentPrimitiveSet;
-        primitiveSet->normals.reset();
+        //primitiveSet->normals.reset();
         primitiveSet->normals = std::make_shared<std::vector<float>>(normal_array);
         primitiveSet->setDirty(PrimitiveSetInstance::DIRTY_NORMALS);
     }
@@ -196,7 +210,7 @@
     __INLINE__ void GeometryDescriptor::copy_color_array(const std::vector<uint8_t>& color_array) {
 
         auto& primitiveSet = currentPrimitiveSet;
-        primitiveSet->colors.reset();
+        //primitiveSet->colors.reset();
         primitiveSet->colors = std::make_shared<std::vector<uint8_t>>(color_array);
         primitiveSet->setDirty(PrimitiveSetInstance::DIRTY_COLORS);
     }
@@ -205,7 +219,7 @@
     __INLINE__ void GeometryDescriptor::copy_index_array(const std::vector<uint32_t>& index_array) {
 
         auto& primitiveSet = currentPrimitiveSet;
-        primitiveSet->indices.reset();
+        //primitiveSet->indices.reset();
         primitiveSet->indices = std::make_shared<std::vector<uint32_t>>(index_array);
         primitiveSet->setDirty(PrimitiveSetInstance::DIRTY_INDICES);
     }
@@ -214,7 +228,7 @@
     __INLINE__ void GeometryDescriptor::move_pos_array(std::vector<float>&& position_array) {
 
         auto& primitiveSet = currentPrimitiveSet;
-        primitiveSet->positions.reset();
+        //primitiveSet->positions.reset();
         primitiveSet->positions = std::make_shared<std::vector<float>>(std::move(position_array));
         primitiveSet->setDirty(PrimitiveSetInstance::DIRTY_POSITIONS);
     }
@@ -223,7 +237,7 @@
     __INLINE__ void GeometryDescriptor::move_normal_array(std::vector<float>&& normal_array) {
 
         auto& primitiveSet = currentPrimitiveSet;
-        primitiveSet->normals.reset();
+        //primitiveSet->normals.reset();
         primitiveSet->normals = std::make_shared<std::vector<float>>(std::move(normal_array));
         primitiveSet->setDirty(PrimitiveSetInstance::DIRTY_NORMALS);
     }
@@ -232,7 +246,7 @@
     __INLINE__ void GeometryDescriptor::move_color_array(std::vector<uint8_t>&& color_array) {
 
         auto& primitiveSet = currentPrimitiveSet;
-        primitiveSet->colors.reset();
+        //primitiveSet->colors.reset();
         primitiveSet->colors = std::make_shared<std::vector<uint8_t>>(std::move(color_array));
         primitiveSet->setDirty(PrimitiveSetInstance::DIRTY_COLORS);
     }
@@ -241,7 +255,7 @@
     __INLINE__ void GeometryDescriptor::move_index_array(std::vector<uint32_t>&& index_array) {
 
         auto& primitiveSet = currentPrimitiveSet;
-        primitiveSet->indices.reset();
+        //primitiveSet->indices.reset();
         primitiveSet->indices = std::make_shared<std::vector<uint32_t>>(std::move(index_array));
         primitiveSet->setDirty(PrimitiveSetInstance::DIRTY_INDICES);
     }
@@ -265,7 +279,7 @@
         }
     }
 
-    /// @brief  Clear dirty flags for a specific primitive set
+    /// @brief  Clear a particular dirty flag for a specific primitive set
     /// @param name 
     /// @param flag 
     __INLINE__ void GeometryDescriptor::clearDirtyFlags(const std::string& name, PrimitiveSetInstance::DirtyFlags flag) {
@@ -316,41 +330,63 @@
     }
 
     /// @brief copy a primitive set
-    __INLINE__ void GeometryDescriptor::copy_primitive_set(const std::string& src, const std::string& dst) {
+    __INLINE__ void GeometryDescriptor::copy_vertex_attributes(const std::string& src, const std::string& dst) {
         auto it = primitives.find(src);
         if (it != primitives.end()) {
+            if(primitives.find(dst) == primitives.end())
+                primitives[dst] = std::make_shared<PrimitiveSetInstance>(dst, (it->second)->get_primitive_type_enum()); 
             *(primitives[dst]->positions) = *((it->second)->positions);
             *(primitives[dst]->normals)   = *((it->second)->normals);
             *(primitives[dst]->colors)    = *((it->second)->colors);
             *(primitives[dst]->indices)   = *((it->second)->indices);
         }
+        std::string err = std::string("Primitive set not found : ") + src + std::string(" or ") + dst;
+        throw std::runtime_error(err);
     }
     
     /// @brief move a primitive set
-    __INLINE__ void GeometryDescriptor::move_primitive_set(const std::string& src, const std::string& dst) {
+    __INLINE__ void GeometryDescriptor::move_vertex_attributes(const std::string& src, const std::string& dst) {
         auto it = primitives.find(src);
         if (it != primitives.end()) {
+
+            primitives[dst] = std::move((it->second));
+            /*
             primitives[dst]->positions = std::move((it->second)->positions);
             primitives[dst]->normals   = std::move((it->second)->normals);
             primitives[dst]->colors    = std::move((it->second)->colors);
             primitives[dst]->indices   = std::move((it->second)->indices);
+            */
         }
+        std::string err = std::string("Primitive set not found : ") + src + std::string(" or ") + dst;
+        throw std::runtime_error(err);
     }
 
     /// @brief share a primitive set
-    __INLINE__ void GeometryDescriptor::share_primitive_set(const std::string& src, const std::string& dst) {
+    __INLINE__ void GeometryDescriptor::share_vertex_attributes(const std::string& src, const std::string& dst) {
         auto it = primitives.find(src);
         if (it != primitives.end()) {
+            if(primitives.find(dst) == primitives.end())
+                primitives[dst] = std::make_shared<PrimitiveSetInstance>(dst, (it->second)->get_primitive_type_enum());
             primitives[dst]->positions = ((it->second)->positions);
             primitives[dst]->normals   = ((it->second)->normals);
             primitives[dst]->colors    = ((it->second)->colors);
             primitives[dst]->indices   = ((it->second)->indices);
         }
+        std::string err = std::string("Primitive set not found : ") + src + std::string(" or ") + dst;
+        throw std::runtime_error(err);
     }
 
     /// @brief copy all primitive sets
     __INLINE__ void GeometryDescriptor::copy_all_primitive_sets(const GeometryDescriptor& src) {
-        primitives = src.primitives;
+        
+        for(auto& primitive_set : src.primitives) {
+            primitives[primitive_set.first] = std::make_shared<PrimitiveSetInstance>(primitive_set.first, primitive_set.second->get_primitive_type_enum());
+            *(primitives[primitive_set.first]->positions) = *(primitive_set.second->positions);
+            *(primitives[primitive_set.first]->normals)   = *(primitive_set.second->normals);
+            *(primitives[primitive_set.first]->colors)    = *(primitive_set.second->colors);
+            *(primitives[primitive_set.first]->indices)   = *(primitive_set.second->indices);
+        }
+
     }
  
     /// @brief move all primitive sets
@@ -387,12 +423,15 @@
                 primitives[dst]->indices = primitiveSet->indices;
                 break;
             }
-        }
+            return;
+        }        
+        std::string err = std::string("No PrimitiveSet with name : [") + src + std::string("]found");
+        throw std::runtime_error(err);        
     }
 
     /// @brief    copy as value vertex attribute array
     /// @details  Copy the position array as deep copy to another primitive set
-    /// @details  This is useful when you want to share the same position array between multiple primitive sets
+    /// @details  This is useful when you want to share a copy of the same position array between multiple primitive sets
     /// @param src 
     /// @param dst 
     __INLINE__ void GeometryDescriptor::copy_attrib_array(const std::string& src , const std::string& dst , PrimitiveSetInstance::VertexArrayType type) {
@@ -414,10 +453,40 @@
                 *(primitives[dst]->indices)   = *(primitiveSet->indices);
                 break;
             }
+            return;
         }
+
+        std::string err = std::string("No PrimitiveSet with name : [") + src + std::string("]found");
+        throw std::runtime_error(err);
+         
     }
 
-    /// @brief  check if the Current Primitive set drawable is empty
+
+    /// @brief    copy by values vertex attrib array
+    /// @details  Copy the vertex attrib array by values to all other primitive set
+    /// @details  This is useful when you want to copy the same vertex attrib array between multiple primitive sets
+    /// @param src , 
+    /// @param dst
+    __INLINE__ void  GeometryDescriptor::copy_attrib_array_with_all(const std::string& src, PrimitiveSetInstance::VertexArrayType type)
+    {
+       for(auto& primitive_set : primitives)
+           copy_attrib_array(src, primitive_set.first, type);
+
+    }
+
+    /// @brief    copy by ref vertex attrib array
+    /// @details  Share the vertex attrib array as a reference to all other primitive set
+    /// @details  This is useful when you want to share the same vertex attrib array between multiple primitive sets
+    /// @param src 
+    /// @param dst 
+    __INLINE__ void  GeometryDescriptor::share_attrib_array_with_all(const std::string& src, PrimitiveSetInstance::VertexArrayType type)
+    {
+       for(auto& primitive_set : primitives)
+           share_attrib_array(src, primitive_set.first, type);
+    }   
+    
+
+    /// @brief  check if the Current Primitive set is drawable 
     /// @return bool
     __INLINE__ bool GeometryDescriptor::isDrawable() const {
      
@@ -444,57 +513,4 @@
     __INLINE__ bool GeometryDescriptor::isValid() const {
         return currentPrimitiveSet->isValid();
     }
-
-
-
-#ifdef _TEST_INDIVIDUAL_COMPONENTS_
-
-/// @brief   Test the individual components of the GeometryDescriptor class
-/// @details This test is used to check if the individual components of the GeometryDescriptor class are working as expected
-// Path: main.cpp
-int main()
-{
-    GeometryDescriptor drawable;
-    drawable.set_new_primitive_set("Triangle", GL_TRIANGLES);
-    bool flag = drawable.isDrawable();
-    try
-    {
-       drawable.isValid();
-    }
-    catch(const std::exception& e) {
-        std::cerr << e.what() << '\n';
-    }
-
-    flag ? std::cout << "Drawable\n" : std::cout << "Not Drawable\n";
-    drawable.push_pos3f(0.0f, 0.0f, 0.0f);
-    drawable.push_pos3f(1.0f, 0.0f, 0.0f);
-    drawable.push_pos3f(0.0f, 1.0f, 0.0f);
-    drawable.push_normal3f(0.0f, 0.0f, 1.0f);
-    drawable.push_normal3f(0.0f, 0.0f, 1.0f);
-    drawable.push_normal3f(0.0f, 0.0f, 1.0f);
-    drawable.push_color3ub(255, 0, 0);
-    drawable.push_color3ub(0, 255, 0);
-    drawable.push_color3ub(0, 0, 255);
-    drawable.push_index(0);
-    drawable.push_index(1);
-    drawable.push_index(2);
-    
-    drawable->get_color_format_enum();
-
-    try
-    {
-       drawable.isValid();
-    }
-    catch(const std::exception& e) {
-        std::cerr << e.what() << '\n';
-    }
-    
-    flag = drawable.isDrawable();
-
-    flag ? std::cout << "Drawable\n" : std::cout << "Not Drawable\n";
-    return 0;
 }
-
-#endif
-
-
