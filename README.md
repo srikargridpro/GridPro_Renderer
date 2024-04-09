@@ -61,9 +61,9 @@ Renderer Lib Provides a API independent abstraction like OpenScene Graph and VTU
               (*cube_descriptor)->set_pick_scheme(GL_PICK_BY_PRIMITIVE);
 
               Gp_gui_entity_handle cube_entity_handle = Scene.get_entity(cube_name);
-              OpenGL_3_3_RenderKernel* triangle_render_kernel1 = cube_entity_handle.GetComponent<OpenGL_3_3_RenderKernel>();
+              OpenGL_3_3_RenderKernel* cube_render_kernel = cube_entity_handle.GetComponent<OpenGL_3_3_RenderKernel>();
 
-              triangle_render_kernel1->set_geometry_descriptor(cube_descriptor);	
+              cube_render_kernel->set_geometry_descriptor(cube_descriptor);	
 
               Scene.update(1.0f);
            }
