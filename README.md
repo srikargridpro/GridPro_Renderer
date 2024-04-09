@@ -23,8 +23,8 @@ Renderer Lib Provides a API independent abstraction like OpenScene Graph and VTU
                Instrumentation::Stopwatch timer("Updating Data");    
  
                std::shared_ptr<GeometryDescriptor> test1 = std::make_shared<GeometryDescriptor>();
-               std::string triangle_name1 = "Triangle1";
-               (test1)->set_current_primitive_set(triangle_name1, GL_QUADS);
+               std::string cube_name = "Cube1";
+               (test1)->set_current_primitive_set(cube_name, GL_QUADS);
 			  
                // Vertex positions for the cube (each vertex appears only once)
                std::vector<float> positions1 = {
@@ -60,7 +60,7 @@ Renderer Lib Provides a API independent abstraction like OpenScene Graph and VTU
       
               (*test1)->set_pick_scheme(GL_PICK_BY_PRIMITIVE);
 
-              Gp_gui_entity_handle triangle_handle1 = Scene.get_entity(triangle_name1);
+              Gp_gui_entity_handle triangle_handle1 = Scene.get_entity(cube_name);
               OpenGL_3_3_RenderKernel* triangle_render_kernel1 = triangle_handle1.GetComponent<OpenGL_3_3_RenderKernel>();
 
               triangle_render_kernel1->set_geometry_descriptor(test1);	
