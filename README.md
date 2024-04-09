@@ -72,14 +72,6 @@ Renderer Lib Provides a API independent abstraction like OpenScene Graph and VTU
            {	
            	std::cout << "Exception : " << e.what() << std::endl;
            }
-...
-
-![sample code output (dark, segoeui font, freetype)](https://user-images.githubusercontent.com/8225057/191050833-b7ecf528-bfae-4a9f-ac1b-f3d83437a2f4.png)
-![sample code output (light, segoeui font, freetype)](https://user-images.githubusercontent.com/8225057/191050838-8742efd4-504d-4334-a9a2-e756d15bc2ab.png)
-
-...
-
-Feel free to explore the documentation and examples to make the most of the HPS Application Framework.
 If you encounter any issues or have questions, please don't hesitate to [open an issue](https://github.com/ksrikar1234/HPS_API_Documentation/issues) on GitHub.
 
 Happy coding!
