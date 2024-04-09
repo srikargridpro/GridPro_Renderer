@@ -69,23 +69,23 @@ To see practical examples of how to use the HPS Application Framework, refer to 
         //       // Bottom face
         //       0, 1, 5, 4
         //      };
+        //    (test1)->move_pos_array(std::move(positions1));
+        //    (test1)->move_index_array(std::move(indices1));
+        //    (*test1)->set_wireframe_mode(GL_WIREFRAME_NONE
+      
+        //    (*test1)->set_pick_scheme(GL_PICK_BY_PRIMITIVE);
 
-		    // 	  (test1)->move_pos_array(std::move(positions1));
-		    // 	  (test1)->move_index_array(std::move(indices1));
-		    // 	  (*test1)->set_wireframe_mode(GL_WIREFRAME_NONE);
-		    // 	  (*test1)->set_pick_scheme(GL_PICK_BY_PRIMITIVE);
+        //    Gp_gui_entity_handle triangle_handle1 = Scene.get_entity(triangle_name1);
+        //    OpenGL_3_3_RenderKernel* triangle_render_kernel1 = triangle_handle1.GetComponent<OpenGL_3_3_RenderKernel>();
 
-		    // 	  Gp_gui_entity_handle triangle_handle1 = Scene.get_entity(triangle_name1);
-		    // 	  OpenGL_3_3_RenderKernel* triangle_render_kernel1 = triangle_handle1.GetComponent<OpenGL_3_3_RenderKernel>();
-
-		    // 	  triangle_render_kernel1->set_geometry_descriptor(test1);	
+        //    triangle_render_kernel1->set_geometry_descriptor(test1);	
 
         //    Scene.update(1.0f);
         //   }
 
         //   catch (const std::exception& e)
         //   {	
-        //   		std::cout << "Exception : " << e.what() << std::endl;
+        //   	std::cout << "Exception : " << e.what() << std::endl;
         //   }
 ...
 
