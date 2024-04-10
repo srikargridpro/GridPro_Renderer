@@ -46,8 +46,8 @@ Renderer Lib Provides a API independent abstraction like OpenScene Graph and VTU
                0, 1, 5, 4
               };
               
-              try 
-              {
+            try 
+            {
                Gp_gui_scene* Scene = (view->get_scene()); 
                Instrumentation::Stopwatch timer("Updating Data");    
                
