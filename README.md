@@ -21,7 +21,9 @@ Renderer Lib Provides a API independent abstraction like OpenScene Graph and VTU
               {
                Gp_gui_scene& Scene = *(view->get_scene()); 
                Instrumentation::Stopwatch timer("Updating Data");    
- 
+               
+               //  Create a Geometry Descriptor 
+               // (Use it instead of using your own mesh class or a set of std::vector<float> for storing VertexAttributes
                std::shared_ptr<GeometryDescriptor> cube_descriptor = std::make_shared<GeometryDescriptor>();
                std::string cube_name = "Cube1";
                (cube_descriptor)->set_current_primitive_set(cube_name, GL_QUADS);
@@ -54,10 +56,12 @@ Renderer Lib Provides a API independent abstraction like OpenScene Graph and VTU
                0, 1, 5, 4
               };
 
+              // Set the Basic Requirements like VertexData 
               (cube_descriptor)->move_pos_array(std::move(positions1));
               (cube_descriptor)->move_index_array(std::move(indices1));
+
+              // Access PrimitiveInstance advanced options by using operator()-> 
               (*cube_descriptor)->set_wireframe_mode(GL_WIREFRAME_NONE);
-      
               (*cube_descriptor)->set_pick_scheme(GL_PICK_BY_PRIMITIVE);
 
               Gp_gui_entity_handle cube_entity_handle = Scene.get_entity(cube_name);
