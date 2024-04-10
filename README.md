@@ -29,7 +29,7 @@ Renderer Lib Provides a API independent abstraction like OpenScene Graph and VTU
                (cube_descriptor)->set_current_primitive_set(cube_name, GL_QUADS);
 			  
                // Vertex positions for the cube (each vertex appears only once)
-               std::vector<float> positions1 = {
+               std::vector<float> positions = {
                -1.0f, -1.0f, -1.0f, // Vertex 0
                 1.0f, -1.0f, -1.0f, // Vertex 1
                 1.0f,  1.0f, -1.0f, // Vertex 2
@@ -41,7 +41,7 @@ Renderer Lib Provides a API independent abstraction like OpenScene Graph and VTU
                };
 
                // Index array defining the order in which vertices are connected to form quads
-               std::vector<uint32_t> indices1 = {
+               std::vector<uint32_t> indices = {
                // Front face
                4, 5, 6, 7,
                // Back face
@@ -57,8 +57,8 @@ Renderer Lib Provides a API independent abstraction like OpenScene Graph and VTU
               };
 
               // Set the Basic Requirements like VertexData 
-              (cube_descriptor)->move_pos_array(std::move(positions1));
-              (cube_descriptor)->move_index_array(std::move(indices1));
+              (cube_descriptor)->move_pos_array(std::move(positions));
+              (cube_descriptor)->move_index_array(std::move(indices));
 
               // Access PrimitiveInstance advanced options by using operator()-> 
               (*cube_descriptor)->set_wireframe_mode(GL_WIREFRAME_NONE);
