@@ -17,17 +17,7 @@ Renderer Lib Provides a API independent abstraction like OpenScene Graph and VTU
 	//    +-----------------------------------------------------------------------------------+
         //    Newer Scene API
 	//    +-----------------------------------------------------------------------------------+
-              try 
-              {
-               Gp_gui_scene* Scene = (view->get_scene()); 
-               Instrumentation::Stopwatch timer("Updating Data");    
-               
-               //  Create a Geometry Descriptor 
-               // (Use it instead of using your own mesh class or a set of std::vector<float> for storing VertexAttributes
-               std::shared_ptr<GeometryDescriptor> cube_descriptor = std::make_shared<GeometryDescriptor>();
-               std::string cube_name = "Cube1";
-               (cube_descriptor)->set_current_primitive_set(cube_name, GL_QUADS);
-			  
+	  
                // Vertex positions for the cube (each vertex appears only once)
                std::vector<float> positions = {
                -1.0f, -1.0f, -1.0f, // Vertex 0
@@ -55,24 +45,35 @@ Renderer Lib Provides a API independent abstraction like OpenScene Graph and VTU
                // Bottom face
                0, 1, 5, 4
               };
+              
+              try 
+              {
+               Gp_gui_scene* Scene = (view->get_scene()); 
+               Instrumentation::Stopwatch timer("Updating Data");    
+               
+               //  Create a Geometry Descriptor 
+               // (Use it instead of using your own mesh class or a set of std::vector<float> for storing VertexAttributes
+               std::shared_ptr<GeometryDescriptor> cube_descriptor = std::make_shared<GeometryDescriptor>();
+               std::string cube_name = "Cube1";
+               (cube_descriptor)->set_current_primitive_set(cube_name, GL_QUADS);
+		
+               // Set the Basic Requirements like VertexData 
+               (cube_descriptor)->move_pos_array(std::move(positions));
+               (cube_descriptor)->move_index_array(std::move(indices));
 
-              // Set the Basic Requirements like VertexData 
-              (cube_descriptor)->move_pos_array(std::move(positions));
-              (cube_descriptor)->move_index_array(std::move(indices));
+               // Access PrimitiveInstance advanced options by using operator()-> 
+               (*cube_descriptor)->set_wireframe_mode(GL_WIREFRAME_NONE);
+               (*cube_descriptor)->set_pick_scheme(GL_PICK_BY_PRIMITIVE);
 
-              // Access PrimitiveInstance advanced options by using operator()-> 
-              (*cube_descriptor)->set_wireframe_mode(GL_WIREFRAME_NONE);
-              (*cube_descriptor)->set_pick_scheme(GL_PICK_BY_PRIMITIVE);
+               // Get a Named EntityHandle from Scene
+               Gp_gui_entity_handle cube_entity_handle = Scene->get_entity(cube_name);
+               // Get Its RenderKernel
+               OpenGL_3_3_RenderKernel* cube_render_kernel = cube_entity_handle.GetComponent<OpenGL_3_3_RenderKernel>();
+               // Load the Descriptor into the kernel
+               cube_render_kernel->set_geometry_descriptor(cube_descriptor);	
 
-              // Get a Named EntityHandle from Scene
-              Gp_gui_entity_handle cube_entity_handle = Scene->get_entity(cube_name);
-              // Get Its RenderKernel
-              OpenGL_3_3_RenderKernel* cube_render_kernel = cube_entity_handle.GetComponent<OpenGL_3_3_RenderKernel>();
-              // Load the Descriptor into the kernel
-              cube_render_kernel->set_geometry_descriptor(cube_descriptor);	
-
-              // Update the Scene
-              Scene->update(1.0f);
+               // Update the Scene
+               Scene->update(1.0f);
            }
 
            catch (const std::exception& e)
