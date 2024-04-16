@@ -48,7 +48,7 @@ Renderer Lib Provides a API independent abstraction like OpenScene Graph and VTU
               
             try 
             {
-               Gp_gui_scene* Scene = (view->get_scene()); 
+               Gp_gui_scene* Scene = (view->get_scene().get()); 
                Instrumentation::Stopwatch timer("Updating Data");    
                
                //  Create a Geometry Descriptor 
