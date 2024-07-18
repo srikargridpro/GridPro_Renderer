@@ -55,15 +55,13 @@ Renderer Lib Provides a API independent abstraction like OpenScene Graph and VTU
                std::string cube_name = "Cube1";
                (cube_descriptor)->set_current_primitive_set(cube_name, GL_QUADS);
 		
-               // Set the Basic Requirements like VertexData 
+               // Set the Basic Requirements like VertexData
                (cube_descriptor)->move_pos_array(std::move(positions));
                (cube_descriptor)->move_index_array(std::move(indices));
+               (cube_descriptor)->set_wireframe_mode(GL_WIREFRAME_NONE);
+               (cube_descriptor)->set_pick_scheme(GL_PICK_BY_PRIMITIVE);
 
-               // Access PrimitiveInstance advanced options by using operator()-> 
-               (*cube_descriptor)->set_wireframe_mode(GL_WIREFRAME_NONE);
-               (*cube_descriptor)->set_pick_scheme(GL_PICK_BY_PRIMITIVE);
-
-               // Get a Named EntityHandle from Scene
+               // Commit Geometry to scene
                viewer()->commit_geometry(cube_name, cube_descriptor);
 
                // Update the Scene
