@@ -19,32 +19,34 @@ Renderer Lib Provides a API independent abstraction like OpenScene Graph and VTU
 	//    +-----------------------------------------------------------------------------------+
 	  
                // Vertex positions for the cube (each vertex appears only once)
-               std::vector<float> positions = {
-               -1.0f, -1.0f, -1.0f, // Vertex 0
-                1.0f, -1.0f, -1.0f, // Vertex 1
-                1.0f,  1.0f, -1.0f, // Vertex 2
-               -1.0f,  1.0f, -1.0f, // Vertex 3
-               -1.0f, -1.0f,  1.0f, // Vertex 4
-                1.0f, -1.0f,  1.0f, // Vertex 5
-                1.0f,  1.0f,  1.0f, // Vertex 6
-               -1.0f,  1.0f,  1.0f  // Vertex 7
+               std::vector<float> positions =
+               {
+                 -1.0f, -1.0f, -1.0f, // Vertex 0
+                  1.0f, -1.0f, -1.0f, // Vertex 1
+                  1.0f,  1.0f, -1.0f, // Vertex 2
+                 -1.0f,  1.0f, -1.0f, // Vertex 3
+                 -1.0f, -1.0f,  1.0f, // Vertex 4
+                  1.0f, -1.0f,  1.0f, // Vertex 5
+                  1.0f,  1.0f,  1.0f, // Vertex 6
+                 -1.0f,  1.0f,  1.0f  // Vertex 7
                };
 
                // Index array defining the order in which vertices are connected to form quads
-               std::vector<uint32_t> indices = {
-               // Front face
-               4, 5, 6, 7,
-               // Back face
-               0, 3, 2, 1,
-               // Left face
-               0, 4, 7, 3,
-               // Right face
-               1, 2, 6, 5,
-               // Top face
-               3, 7, 6, 2,
-               // Bottom face
-               0, 1, 5, 4
-              };
+               std::vector<uint32_t> indices =
+               {
+                 // Front face
+                 4, 5, 6, 7,
+                 // Back face
+                 0, 3, 2, 1,
+                 // Left face
+                 0, 4, 7, 3,
+                 // Right face
+                 1, 2, 6, 5,
+                 // Top face
+                 3, 7, 6, 2,
+                 // Bottom face
+                 0, 1, 5, 4
+                };
               
             try 
             {                 
@@ -68,7 +70,7 @@ Renderer Lib Provides a API independent abstraction like OpenScene Graph and VTU
                Scene->update(1.0f);
            }
 
-           catch (const std::exception& e)
+           catch(const std::exception& e)
            {	
            	std::cout << "Exception : " << e.what() << std::endl;
            }
