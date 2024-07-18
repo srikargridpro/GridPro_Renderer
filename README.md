@@ -47,9 +47,7 @@ Renderer Lib Provides a API independent abstraction like OpenScene Graph and VTU
               };
               
             try 
-            {
-               // Create or Get Scene Instance 
-                 
+            {                 
                // Create a Geometry Descriptor 
                std::shared_ptr<GeometryDescriptor> cube_descriptor = std::make_shared<GeometryDescriptor>();
                std::string cube_name = "Cube1";
