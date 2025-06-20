@@ -2,9 +2,9 @@
 
 ## Overview
 
-`AbstractViewerWindow` is the cornerstone interface for rendering in the GridPro GFX module. It abstracts away the complexity of OpenGL function access, scene management, picking, and rendering, offering a standardized and intuitive interface.
+`AbstractViewerWindow Interface Class & GeometryDescriptor class` are the cornerstone interfaces for rendering in the GridPro GFX module. It abstracts away the complexity of OpenGL function access, scene management, picking, and rendering, offering a standardized and intuitive interface.
 
-It is not meant to be used directly. Instead, it serves as a middleware base for GUI developers to build concrete viewer windows using rendering frameworks like Qt (via `QOpenGLWidget`), GLFW, or OpenSceneGraph.
+It serves as a middleware base for GUI developers to build concrete viewer windows using rendering frameworks like Qt (via `QOpenGLWidget`), GLFW, or OpenSceneGraph.
 
 The abstraction accommodates varying OpenGL function loaders — such as `QOpenGLFunctions_4_3_Compatibility` in Qt or `GLEW` in GLFW — while still exposing a unified public API.
 
