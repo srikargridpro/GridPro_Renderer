@@ -8,7 +8,7 @@ It is not meant to be used directly. Instead, it serves as a middleware base for
 
 The abstraction accommodates varying OpenGL function loaders — such as `QOpenGLFunctions_4_3_Compatibility` in Qt or `GLEW` in GLFW — while still exposing a unified public API.
 
-## Why Use `AbstractViewerWindow`?
+## Why Use `AbstractViewerWindow Interface`?
 
 GridPro GFX is designed for high-performance, interactive scientific visualization. To support this while simplifying the development effort:
 
