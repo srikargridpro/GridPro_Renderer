@@ -1,3 +1,146 @@
+# AbstractViewerWindow
+
+## Overview
+
+`AbstractViewerWindow` is the cornerstone interface for rendering in the GridPro GFX module. It abstracts away the complexity of OpenGL function access, scene management, picking, and rendering, offering a standardized and intuitive interface.
+
+It is not meant to be used directly. Instead, it serves as a middleware base for GUI developers to build concrete viewer windows using rendering frameworks like Qt (via `QOpenGLWidget`), GLFW, or OpenSceneGraph.
+
+The abstraction accommodates varying OpenGL function loaders — such as `QOpenGLFunctions_4_3_Compatibility` in Qt or `GLEW` in GLFW — while still exposing a unified public API.
+
+## Why Use `AbstractViewerWindow`?
+
+GridPro GFX is designed for high-performance, interactive scientific visualization. To support this while simplifying the development effort:
+
+* `AbstractViewerWindow` offers a **stable and consistent viewer interface**.
+* Think of it as the **paper**, and the `GeometryDescriptor` as the **pen**.
+* Geometry is committed via a descriptor, and rendering is managed internally.
+* GUI developers can subclass this interface and plug in their preferred rendering backend without needing to reinvent rendering logic.
+
+## Core Capabilities
+
+* **Scene Management**: Abstracts a scene graph and layer system with default SceneManager.
+* **Orthographic Camera**: A protected default camera simplifies spatial navigation.
+* **Geometry Commit System**: Queue-based commit stack for 2D and 3D descriptors.
+* **Blending & Lighting Controls**: Easy toggles to manage OpenGL rendering states.
+* **Selection & Picking**: Callback interfaces for entity picking, box selection, and double-click events.
+* **Workplane Utilities**: Projection and manipulation aids for geometry interaction.
+* **Customizable Event Hooks**: Override event handlers to respond to user input.
+* **Text Overlay**: Render 2D text in normalized device space.
+
+## Design Philosophy
+
+* **Interface Not Implementation**: The class provides default fallbacks, but real functionality should be implemented in derived viewer classes.
+* **Cross-Backend Compatibility**: Qt, GLFW, or OpenSceneGraph backends can be supported with minimal effort.
+* **Scene Abstraction**: Geometry and interactions are managed without direct OpenGL calls.
+* **Plugin Flexibility**: ImGui or other overlays can be layered in independently.
+
+## Extending AbstractViewerWindow
+
+To create a viewer, subclass `AbstractViewerWindow` and implement key OpenGL-related virtual methods:
+
+```cpp
+class MyViewer : public QWidget, public AbstractViewerWindow {
+public:
+    void initializeGL() override { /* Setup GL context */ }
+    void paintGL() override { /* Draw committed geometry */ }
+    void update_display() override { update(); }
+    void capture_screen_shot(...) override { /* Save framebuffer */ }
+    void render_2d_text(...) override { /* Implement text rendering */ }
+};
+```
+
+## Essential Public API Functions
+
+| Method                                           | Description                               |
+| ------------------------------------------------ | ----------------------------------------- |
+| `commit_geometry()`                              | Commit 3D geometry to the scene           |
+| `commit_2d_geometry()`                           | Commit 2D geometry to the scene           |
+| `upload_commits()`                               | Upload all committed descriptors          |
+| `remove_geometry()`                              | Remove geometry from the scene            |
+| `hide_geometry()` / `show_geometry()`            | Toggle visibility of entities             |
+| `set_bounding_box()`                             | Define spatial bounds for framing         |
+| `set_blend_state()` / `is_blending_enabled()`    | Control OpenGL blending                   |
+| `set_lighting_state()` / `is_lighting_enabled()` | Control OpenGL lighting                   |
+| `clear_screen(r, g, b, a)`                       | Clear the display with RGBA color         |
+| `zoom_in()` / `zoom_out()`                       | Camera zoom control                       |
+| `snap_to_*_plane()`                              | Snap camera to orthogonal/isometric views |
+| `render_2d_text(...)`                            | Overlay screen-space text                 |
+| `set_pick_callback(...)`                         | Register picking callback                 |
+
+## Internal Components
+
+* `Scene_Manager`: Manages rendering layers and geometry lifecycle.
+* `OrthographicCamera`: Built-in camera with panning, zoom, and snapping.
+* `GeometryDescriptor`: Encapsulates geometry data and metadata.
+* `WorkPlane`: Projected plane with geometry-aligned interaction tools.
+* `MouseState`, `Gizmo`, `LightPosition`, and `ScreenDimensions`: Internal state helpers.
+
+## Example: `Viewer` Implementation
+
+The `Viewer` class is a concrete implementation using Qt’s `QOpenGLWidget`:
+
+### Key Features
+
+* Integrates with Qt’s event system
+* Uses `QOpenGLFunctions_4_3_Compatibility`
+* Adds ImGui widget support
+* Emits signals for entity picking and interaction
+
+### Common API Functions
+
+| Method                                          | Description                             |
+| ----------------------------------------------- | --------------------------------------- |
+| `commit_geometry()`                             | Commit geometry to the scene            |
+| `set_bounding_box()`                            | Define the spatial bounds for the scene |
+| `is_blending_enabled()`                         | Check if blending is currently active   |
+| `set_blend_state(bool)`                         | Enable or disable blending              |
+| `is_lighting_enabled()`                         | Check if lighting is currently active   |
+| `set_lighting_state(bool)`                      | Enable or disable lighting              |
+| `capture_screen_shot(res_scale_x, res_scale_y)` | Save a high-res screenshot              |
+| `render_2d_text(nx, ny, text, size, color)`     | Render screen-aligned text              |
+| `add_imgui_widget(name, widget)`                | Add ImGui widget to the render loop     |
+| `remove_imgui_widget(name)`                     | Remove ImGui widget                     |
+
+### Event Hooks
+
+* `mousePressEvent`, `mouseMoveEvent`, `mouseReleaseEvent`
+* `keyPressEvent`, `keyReleaseEvent`, `wheelEvent`, `paintEvent`
+
+### Example Usage
+
+```cpp
+Viewer* viewer = new Viewer(parent);
+viewer->commit_geometry(...);
+viewer->set_bounding_box(...);
+viewer->set_blend_state(true);
+viewer->show();
+```
+
+### Signals
+
+| Signal                                                            | Description                                     |
+| ----------------------------------------------------------------- | ----------------------------------------------- |
+| `picked(data)`                                                    | Triggered when an entity is picked in the scene |
+| `gl_entity_picked(entity_key, sub_entity, button, key_held, pos)` | Detailed picking information                    |
+
+## Intended Users
+
+* **Scientific Programmers**: Can use the interface to visualize complex mesh and geometry without worrying about OpenGL or GPU management.
+* **GUI Developers**: Can extend or replace internals (scene manager, camera, UI integrations) for custom workflows.
+
+## Notes
+
+* Do not instantiate `AbstractViewerWindow` directly.
+* Combine it with a GUI widget like `QOpenGLWidget` or your rendering surface of choice.
+* The interface offers a powerful middle layer between raw OpenGL and high-level scientific visualization.
+
+---
+
+For full API reference and examples, refer to the [GridPro GFX documentation site](#) or the module source.
+
+
+
 # GridPro Renderer
 GridPro WS internal Renderer API Abstraction.
 
