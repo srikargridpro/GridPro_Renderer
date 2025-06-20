@@ -1,4 +1,4 @@
-# AbstractViewerWindow
+# GridPro GFX Module
 
 ## Overview
 
